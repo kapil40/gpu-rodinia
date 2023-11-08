@@ -3,7 +3,7 @@ include common/make.config
 RODINIA_BASE_DIR := $(shell pwd)
 
 CUDA_BIN_DIR := $(RODINIA_BASE_DIR)/bin/linux/cuda
-OMP_BIN_DIR := $(RODINIA_BASE_DIR)/bin/linux/omp
+OMP_BIN_DIR := $(RODINIA_BASE_DIR)
 OPENCL_BIN_DIR := $(RODINIA_BASE_DIR)/bin/linux/opencl
 
 CUDA_DIRS := backprop bfs cfd gaussian heartwall hotspot kmeans lavaMD leukocyte lud nn	nw srad streamcluster particlefilter pathfinder mummergpu
@@ -36,15 +36,18 @@ CUDA:
 	
 	
 OMP:
+	cd openmp/b+tree;				make;	cp b+tree.out $(OMP_BIN_DIR)
 	cd openmp/backprop;				make;	cp backprop $(OMP_BIN_DIR)
 	cd openmp/bfs;					make;	cp bfs $(OMP_BIN_DIR)
 	cd openmp/cfd;					make;	cp euler3d_cpu euler3d_cpu_double pre_euler3d_cpu pre_euler3d_cpu_double $(OMP_BIN_DIR)
 	cd openmp/heartwall;				make;	cp heartwall $(OMP_BIN_DIR)
 	cd openmp/hotspot;				make;	cp hotspot $(OMP_BIN_DIR)
+	cd openmp/hotspot3D;				make;	cp 3D $(OMP_BIN_DIR)
 	cd openmp/kmeans/kmeans_openmp;			make;	cp kmeans $(OMP_BIN_DIR)
 	cd openmp/lavaMD;				make;	cp lavaMD $(OMP_BIN_DIR)
 	cd openmp/leukocyte;				make;	cp OpenMP/leukocyte $(OMP_BIN_DIR)
 	cd openmp/lud;					make;	cp omp/lud_omp $(OMP_BIN_DIR)
+	cd openmp/myocyte;			    make;	cp myocyte.out	$(OMP_BIN_DIR)
 	cd openmp/nn;					make;	cp nn $(OMP_BIN_DIR)
 	cd openmp/nw;					make;	cp needle $(OMP_BIN_DIR)
 	cd openmp/srad/srad_v1;				make;	cp srad $(OMP_BIN_DIR)/srad_v1
@@ -52,7 +55,7 @@ OMP:
 	cd openmp/streamcluster;			make;	cp sc_omp $(OMP_BIN_DIR)
 	cd openmp/particlefilter;			make;	cp particle_filter $(OMP_BIN_DIR)
 	cd openmp/pathfinder;				make;	cp pathfinder $(OMP_BIN_DIR)
-	cd openmp/mummergpu;				make;	cp bin/mummergpu $(OMP_BIN_DIR)
+	# cd openmp/mummergpu;				make;	cp bin/mummergpu $(OMP_BIN_DIR)
 
 OPENCL:
 	cd opencl/backprop;			make;	cp backprop     $(OPENCL_BIN_DIR)
@@ -83,7 +86,7 @@ CUDA_clean:
 	for dir in $(CUDA_DIRS) ; do cd cuda/$$dir ; make clean ; cd ../.. ; done
 	
 OMP_clean:
-	cd $(OMP_BIN_DIR); rm -f *
+	cd $(OMP_BIN_DIR); rm -f b+tree.out backprop bfs euler3d_cpu euler3d_cpu_double pre_euler3d_cpu pre_euler3d_cpu_double heartwall hotspot 3D kmeans lavaMD leukocyte lud_omp myocyte.out needle nn particle_filter pathfinder sc_omp srad_v1 srad_v2 density density_energy image_out.pgm momentum out output.out output.txt result.txt
 	for dir in $(OMP_DIRS) ; do cd openmp/$$dir ; make clean ; cd ../.. ; done
 
 OCL_clean:
