@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cuda-pod
+spec:
+  restartPolicy: OnFailure
+  volumes:
+  - name: shared-data
+    emptyDir: {}
+  - name: dshm
+    emptyDir:
+      medium: Memory
+
+  containers:
+  - name: samil-container
+    image: kapil19/cuda
+    command: ['sh', '-c', 'sleep 3600']
+    volumeMounts:
+    - name: dshm
+      mountPath: /dev/shm
+    resources:
+      limits:
+        nvidia.com/gpu: 1
+    securityContext:
+      capabilities:
+        add: ["SYS_ADMIN"]
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: gpu-pod
+# spec:
+#   restartPolicy: Never
+#   containers:
+#     - name: cuda-container
+#       image: nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda10.2
+#       resources:
+#         limits:
+#           nvidia.com/gpu: 1 # requesting 1 GPU
+#   tolerations:
+#   - key: nvidia.com/gpu
+#     operator: Exists
+#     effect: NoSchedule
